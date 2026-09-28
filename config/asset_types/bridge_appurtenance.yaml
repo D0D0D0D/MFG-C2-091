@@ -1,0 +1,42 @@
+# 橋梁付属物（高欄・伸縮装置・支承等）— docs/02_design.md §(a) 初期同梱サンプル。
+# 橋梁本体の画像診断・国交省様式1〜3自動記載はスコープ外（Dr.Bridge 領域）。
+# 付属物のテキスト/数値点検ログのみが対象。
+#
+# メトリクス閾値は OPC UA LimitAlarmType 準拠のスカラ閾値（OPC 10000-9 §5.8.11）。
+# 各閾値は任意宣言。順序制約: low_low_limit <= low_limit <= high_limit <= high_high_limit。
+# 出典: 国交省道路メンテナンス年報・各種設備保全指針（公開文献ベースの初期整備値）。
+
+metrics:
+  expansion_joint_gap_mm:
+    unit: "mm"
+    high_limit: 40
+    high_high_limit: 60
+  corrosion_area_ratio:
+    unit: "ratio"
+    high_limit: 0.15
+    high_high_limit: 0.30
+  bearing_displacement_mm:
+    unit: "mm"
+    high_limit: 10
+    high_high_limit: 20
+  handrail_corrosion_depth_mm:
+    unit: "mm"
+    high_limit: 2.0
+    high_high_limit: 4.0
+
+degradation_modes:
+  - mode_id: "expansion_joint_wear"
+    trigger_metrics: ["expansion_joint_gap_mm"]
+    typical_progression: "伸縮装置の遊間は経年で拡大し、車両走行時の衝撃・段差の要因となる。"
+  - mode_id: "corrosion_progression"
+    trigger_metrics: ["corrosion_area_ratio", "handrail_corrosion_depth_mm"]
+    typical_progression: "腐食は環境条件（塩害・凍結防止剤散布等）により進行速度が変動する。"
+  - mode_id: "bearing_displacement"
+    trigger_metrics: ["bearing_displacement_mm"]
+    typical_progression: "支承の変位は温度変化・地震動の累積影響で進行しうる。"
+
+intervention_types:
+  - "observe"
+  - "detailed_investigation"
+  - "repair"
+  - "replace"

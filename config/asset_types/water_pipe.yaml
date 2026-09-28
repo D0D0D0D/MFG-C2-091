@@ -1,0 +1,33 @@
+# 上下水道管路 — docs/02_design.md §(a) 初期同梱サンプル。
+# 管路の点検・維持管理記録（腐食・漏水・内面劣化等）を対象とする。
+#
+# メトリクス閾値は OPC UA LimitAlarmType 準拠のスカラ閾値（OPC 10000-9 §5.8.11）。
+# 出典: 各種設備保全指針（公開文献ベースの初期整備値）。
+
+metrics:
+  pipe_wall_thickness_loss_ratio:
+    unit: "ratio"
+    high_limit: 0.20
+    high_high_limit: 0.35
+  leak_detection_flow_rate_l_min:
+    unit: "l/min"
+    high_limit: 5.0
+    high_high_limit: 15.0
+  internal_corrosion_depth_mm:
+    unit: "mm"
+    high_limit: 3.0
+    high_high_limit: 6.0
+
+degradation_modes:
+  - mode_id: "wall_thinning"
+    trigger_metrics: ["pipe_wall_thickness_loss_ratio", "internal_corrosion_depth_mm"]
+    typical_progression: "管壁の減肉は経年・土壌条件・水質により進行速度が変動する。"
+  - mode_id: "leak_progression"
+    trigger_metrics: ["leak_detection_flow_rate_l_min"]
+    typical_progression: "微小漏水は放置すると拡大し、突発的な破損に至る場合がある。"
+
+intervention_types:
+  - "observe"
+  - "detailed_investigation"
+  - "repair"
+  - "replace"

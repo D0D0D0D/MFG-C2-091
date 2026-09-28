@@ -1,0 +1,37 @@
+# 回転機器（ポンプ・送風機等）— docs/02_design.md §(a) 初期同梱サンプル。
+# 設備点検ログ（振動・温度・軸受状態等）を対象とする。
+#
+# メトリクス閾値は OPC UA LimitAlarmType 準拠のスカラ閾値（OPC 10000-9 §5.8.11）。
+# 出典: 各種設備保全指針（公開文献ベースの初期整備値）。
+
+metrics:
+  vibration_velocity_mm_s:
+    unit: "mm/s"
+    high_limit: 4.5
+    high_high_limit: 7.1
+  bearing_temperature_c:
+    unit: "celsius"
+    high_limit: 70
+    high_high_limit: 90
+  motor_current_a:
+    unit: "ampere"
+    high_limit: 110
+    high_high_limit: 130
+  insulation_resistance_mohm:
+    unit: "megaohm"
+    low_limit: 1.0
+    low_low_limit: 0.5
+
+degradation_modes:
+  - mode_id: "bearing_wear"
+    trigger_metrics: ["vibration_velocity_mm_s", "bearing_temperature_c", "motor_current_a"]
+    typical_progression: "軸受摩耗は振動・温度上昇・モーター電流上昇として進行的に現れる。"
+  - mode_id: "insulation_degradation"
+    trigger_metrics: ["insulation_resistance_mohm"]
+    typical_progression: "絶縁劣化は湿気・経年により絶縁抵抗値が低下する形で進行する。"
+
+intervention_types:
+  - "observe"
+  - "detailed_investigation"
+  - "repair"
+  - "replace"
